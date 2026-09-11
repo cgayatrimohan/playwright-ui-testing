@@ -13,3 +13,10 @@ Annotations to be used inside test file
 ----------------------------------------
 test.only -> to run only that test
 test.skip -> to skip that test
+
+
+Test Execution
+----------------------------------
+To run tests in UI mode -> npx playwright test --ui
+To enble the trace option -> npx playwright test --project=chromium --trace on
+To debug tests locally --> npx playwright test --project=chromium --debug
