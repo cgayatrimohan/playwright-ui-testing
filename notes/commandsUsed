@@ -1,0 +1,15 @@
+Playwright CLI commands
+--------------------------
+
+To run the tests -> npx playwright test
+To run the tests with browser open -> npx playwright test --headed
+To run tests under specific project -> npx playwright test --project=chromium --headed
+To run a specific test/spec file -> npx playwright test spec example.spec.ts --project=chromium --headed
+To run by test name -> npx playwright test -g "has title" --project=chromium --headed
+To open the results of last execution -> npx playwright show-report --> http://localhost:9323/
+
+
+Annotations to be used inside test file
+----------------------------------------
+test.only -> to run only that test
+test.skip -> to skip that test
