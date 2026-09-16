@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 
 test.describe('Locator syntax tests', () => {
     test.beforeEach(async ({ page }) => {
@@ -77,6 +77,25 @@ test.describe('Locator syntax tests', () => {
     })
 
     test('Reusing locators', async ({ page }) => {
-        
+        const basicForm = page.locator('nb-card', {hasText: "Basic form"})
+
+        await basicForm.getByLabel('Email').fill('test@example.com')
+        await basicForm.getByLabel('Password').fill('playwright')
+        await basicForm.locator('nb-checkbox').click()
+       
+        await expect(basicForm.getByLabel('Email')).toHaveValue('test@example.com')
+
+        //writing the same for form without labels
+        const formWithoutLabels = page.locator('nb-card', {hasText: "Form without labels"})
+        await formWithoutLabels.locator('[placeholder = "Recipients"]').fill('test@example.com')
+        await formWithoutLabels.locator('[placeholder = "Subject"]').fill('testing')
+        await formWithoutLabels.locator('[placeholder = "Message"]').fill('This is a test message')
+        await formWithoutLabels.getByRole('button', {name: 'Send'}).click()
     })
+
+    // test('Extracting values', async ({ page }) => {
+    //     const basicForm = page.locator('nb-card', {hasText: "Basic form"})
+
+    //     await
+    // }
 })
