@@ -58,6 +58,25 @@ test.describe('Locator syntax tests', () => {
         await page.locator('nb-card').getByRole('button', {name: 'Sign in'}).first().click()
 
         await page.locator('nb-card').nth(3).getByRole('button').click();
+    })
 
+    test('Locating parent elements', async({ page }) => {
+        await page.locator('nb-card', {hasText: 'Using the Grid'}).getByRole('button').click()
+        await page.locator('nb-card', {has: page.locator('#inputEmail1')}).getByRole('button').click()
+
+        await page.locator('nb-card', {hasText: 'Horizontal form'}).getByRole('button').click()
+
+        //find form which have sign-in along with checkbox 
+        await page.locator('nb-card')
+                  .filter({has: page.locator('nb-checkbox')})
+                  .filter({hasText: 'Sign in'})
+                  .getByLabel('Email')
+                  .fill('test@example.com')
+
+        await page.getByText('Using the Grid').locator('..').getByRole('button').click()
+    })
+
+    test('Reusing locators', async ({ page }) => {
+        
     })
 })
