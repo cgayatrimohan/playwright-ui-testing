@@ -36,4 +36,18 @@ test.describe('Locator syntax tests', () => {
         page.locator(':text-is("Using the Grid")')
     })
 
+    test('User-visible-locators', async ({ page }) => {
+        await page.getByRole('button', {name: 'Sign in'}).first().click()
+        await page.getByRole('textbox', {name: 'Email'}).first().fill('test@example.com')
+
+        await page.getByLabel('Email').first().fill('test@example.com')
+
+        await page.getByPlaceholder('Jane Doe').fill('Gayatri')
+
+        await page.getByText('Submit').first().click()
+
+        await page.getByTestId('inputEmail1').fill('test@example.com')
+
+        await page.getByTitle('IoT Dashboard').click()
+    })
 })
