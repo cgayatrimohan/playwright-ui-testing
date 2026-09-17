@@ -93,9 +93,30 @@ test.describe('Locator syntax tests', () => {
         await formWithoutLabels.getByRole('button', {name: 'Send'}).click()
     })
 
-    // test('Extracting values', async ({ page }) => {
-    //     const basicForm = page.locator('nb-card', {hasText: "Basic form"})
+    test('Extracting values', async ({ page }) => {
+        //extracting text value from a single element
+        const basicForm = page.locator('nb-card', {hasText: "Basic form"})
+        const submitButtonText = await basicForm.getByRole('button').textContent()
+        console.log("Submit button text is: " + submitButtonText)  
+        expect(submitButtonText).toEqual('Submit')
 
-    //     await
-    // }
+        // extracting multiple text values from a list of elements
+        const gridForm = page.locator('nb-card', {hasText: "Using the Grid"})
+        const allRadioButtonsValues = await gridForm.locator('nb-radio-group nb-radio').allTextContents()
+        console.log(allRadioButtonsValues)
+        expect(allRadioButtonsValues).toEqual(['Option 1', 'Option 2', 'Disabled Option'])
+
+        //extract input field values
+        const emailField = basicForm.getByRole('textbox', {name: 'Email'})
+        await emailField.fill('test@example.com')
+
+        const emailFieldValueText = await emailField.inputValue()
+        console.log(emailFieldValueText)
+        expect(emailFieldValueText).toEqual('test@example.com')
+
+        //extract attribute value
+        const emailPlaceholder = await emailField.getAttribute('placeholder')
+        console.log(emailPlaceholder)
+        expect(emailPlaceholder).toEqual('Email')
+    })
 })
