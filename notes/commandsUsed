@@ -20,3 +20,13 @@ Test Execution
 To run tests in UI mode -> npx playwright test --ui
 To enble the trace option -> npx playwright test --project=chromium --trace on
 To debug tests locally --> npx playwright test --project=chromium --debug
+
+
+What is promise?
+Promise is a type of function in JavaScript that waits for the desired or expected condition to be executed.
+Promise can be resolved or rejected.
+And if the expected condition is satisfied within the timeout, it is resolved.
+if the condition is NOT satisfied, promise is rejected and the step is failed.
+<<<playwright.dev/docs/actionability>>> Auto waiting where we have table with all action methods and for which these action methods are waiting for
+default wait time is 30seconds for the element to be visible.
+
