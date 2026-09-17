@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test'
 
-test.beforeEach(async ({page}) => {
+test.beforeEach(async ({ page }, testInfo) => {
     await page.goto("https://playground.bondaracademy.com/")
     await page.getByText('Modal & Overlays').click()
     await page.getByText('Dialog').click()
+    // testInfo.setTimeout(10000) //set timeout for the test case to 10 seconds only for this test case.
 })
 
 test('Auto waiting', async ({ page }) => {
@@ -44,4 +45,14 @@ test('Alternative waits', async ({ page }) => {
     // expect(dialogHeaderText).toEqual('Friendly reminder')
 
     await expect(dialogContainer.locator('nb-card-header')).toHaveText('Friendly reminder')
+})
+
+test('Timeouts', async ({ page }) => {
+    // test.setTimeout(10000) //set timeout for the test case to 10 seconds only for this test case.
+    // test.slow()
+    const dialogWithDelayForm = page.locator('nb-card', {hasText: 'Open Dialog with Delay'})
+    await dialogWithDelayForm.getByRole('button', {name: '3 seconds'}).click()
+    const dialogContainer = page.locator('nb-dialog-container')
+
+    await dialogContainer.getByRole('button', {name: 'Ok'}).click()
 })

@@ -30,3 +30,4 @@ if the condition is NOT satisfied, promise is rejected and the step is failed.
 <<<playwright.dev/docs/actionability>>> Auto waiting where we have table with all action methods and for which these action methods are waiting for
 default wait time is 30seconds for the element to be visible.
 
+
