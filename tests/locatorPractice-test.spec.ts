@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 
 test.describe('Locator syntax tests', () => {
 
@@ -16,5 +16,15 @@ test.describe('Locator syntax tests', () => {
         await page.getByRole('textbox', {name: "Current Address"}).fill("Test address")
         await page.locator('#permanentAddress').fill("Test permanent address")
         await page.getByRole('button', {name: "Submit"}).click()
+    })
+
+    test('Extract values', async ({ page }) => {
+        await page.goto("https://demoqa.com/elements")
+        await page.getByRole('link', {name: 'Radio Button'}).click()
+
+        //extract all values of radio buttons
+        const radioButtonsEnabled = await page.locator('[class="form-check-label"]').allTextContents()        
+        console.log(radioButtonsEnabled)
+        expect(radioButtonsEnabled).toEqual(['Yes', 'Impressive'])
     })
 })

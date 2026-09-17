@@ -119,4 +119,23 @@ test.describe('Locator syntax tests', () => {
         console.log(emailPlaceholder)
         expect(emailPlaceholder).toEqual('Email')
     })
+
+    test('Assertions', async ({ page }) => {
+
+        // Generic assertions
+        const value = 5
+        expect(value).toEqual(5)
+
+        const basicFormSelectionButton = page.locator('nb-card', {hasText: "Basic form"}).getByRole('button')
+        const submitButtonText = await basicFormSelectionButton.textContent()
+        expect(submitButtonText).toEqual('Submit')
+
+        // Locator assertions
+        await expect(basicFormSelectionButton).toHaveText('Submit')
+
+        // soft assertions
+        await expect.soft(basicFormSelectionButton).toHaveText('Submit')
+        await basicFormSelectionButton.click()
+    })
+
 })
