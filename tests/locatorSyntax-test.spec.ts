@@ -138,4 +138,7 @@ test.describe('Locator syntax tests', () => {
         await basicFormSelectionButton.click()
     })
 
+    test('Generated test', async( { page }) => {
+        await page.getByRole('textbox', {name: 'Email address'}).fill('test@example.com')
+    })
 })

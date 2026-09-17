@@ -23,6 +23,7 @@ To debug tests locally --> npx playwright test --project=chromium --debug
 
 
 What is promise?
+----------------------------------
 Promise is a type of function in JavaScript that waits for the desired or expected condition to be executed.
 Promise can be resolved or rejected.
 And if the expected condition is satisfied within the timeout, it is resolved.
@@ -31,3 +32,9 @@ if the condition is NOT satisfied, promise is rejected and the step is failed.
 default wait time is 30seconds for the element to be visible.
 
 
+Code Generation
+----------------------------------
+Playwright tools like the following can be used to generate the code and increase the speed of execution
+    - Pick locator
+    - Record new
+    - Record at cursor 
