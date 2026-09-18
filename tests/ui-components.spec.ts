@@ -45,6 +45,20 @@ test.describe('Forms Layouts Page', async () => {
         await expect(usingTheGridForm.getByRole('radio', {name: 'Option 1'})).not.toBeChecked()
     })
 
+    test('Date picker', async({ page }) => {
+       await page.getByText('Datepicker').click()
+       
+       // Example: Common Datepicker
+       const calendarInputField = page.getByPlaceholder('Form Picker')
+       await calendarInputField.click()
+
+       await page.locator('.day-cell:not(.bounding-month)').getByText('15').click()
+    // await page.locator('.day-cell:not(.bounding-month)').getByText('2', {exact: true}).click() --> if using single digit use exact
+       await expect(calendarInputField).toHaveValue('Sep 15, 2026') 
+       
+       // Example: 
+    })
+
 })
 
 test.describe('Modal & Overlays Page', async () => {

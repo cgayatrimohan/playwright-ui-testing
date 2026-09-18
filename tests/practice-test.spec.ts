@@ -107,4 +107,26 @@ test.describe('Locator syntax tests', () => {
         await page.locator('#userEmail').fill('test@example.com')
         await page.getByRole('button', {name: 'Submit'}).click()
     })
+
+    test('Date picker', async({ page }) => {
+        await page.goto("https://demoqa.com/date-picker")
+        
+        const datepickerInputFeild = page.locator('#datePickerMonthYearInput')
+        await datepickerInputFeild.click()
+
+        // Select Date
+        await page.locator('.react-datepicker__day--001:not(.react-datepicker__day--outside-month)').click()
+        await expect(datepickerInputFeild).toHaveValue('09/01/2026')
+
+        // Date and Time
+        const dateTimePickerField = page.locator('#dateAndTimePickerInput')
+        await dateTimePickerField.click()
+
+        await page.locator('.react-datepicker__day--017').click()
+        // await page.getByRole('option', {name: '12:00', exact: true}).click()
+        // await expect(dateTimePickerField).toHaveValue('September 17, 2026 12:00 PM')
+        await page.getByRole('option', {name: '08:45', exact: true}).click()
+        await expect(dateTimePickerField).toHaveValue('September 17, 2026 8:45 AM')
+        
+    })
 })
