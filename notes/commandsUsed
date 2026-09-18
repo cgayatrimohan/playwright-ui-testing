@@ -42,3 +42,9 @@ Playwright tools like the following can be used to generate the code and increas
 Freezing the DOM (when you cannot inspect an element as it disappears ex: tooltip)
 --------------------------------------------------------------------
 - Use "Cmd + \" to freeze the DOM 
+
+
+Dynamically use date
+-----------------------
+- Date function
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date

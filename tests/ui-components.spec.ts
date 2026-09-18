@@ -45,7 +45,7 @@ test.describe('Forms Layouts Page', async () => {
         await expect(usingTheGridForm.getByRole('radio', {name: 'Option 1'})).not.toBeChecked()
     })
 
-    test('Date picker', async({ page }) => {
+    test('Date picker within current month', async({ page }) => {
        await page.getByText('Datepicker').click()
        
        // Example: Common Datepicker
@@ -56,7 +56,52 @@ test.describe('Forms Layouts Page', async () => {
     // await page.locator('.day-cell:not(.bounding-month)').getByText('2', {exact: true}).click() --> if using single digit use exact
        await expect(calendarInputField).toHaveValue('Sep 15, 2026') 
        
-       // Example: 
+
+       const date = new Date()
+       date.setDate(date.getDate() + 5) //--> within the same month
+
+
+       const expectedDay = date.getDate().toString()
+       const expectedMonth = date.toLocaleDateString('En-US', {month: 'short'})
+       const expectedMonthLong = date.toLocaleDateString('En-US', {month: 'long'})
+       const expectedYear = date.getFullYear().toString()
+       const expectedDate = `${expectedMonth} ${expectedDay}, ${expectedYear}`
+
+
+       await calendarInputField.click()
+       await page.locator('.day-cell:not(.bounding-month)').getByText(expectedDay, {exact: true}).click()
+       await expect(calendarInputField).toHaveValue(expectedDate)
+    })
+
+    test('Date picker future month', async({ page }) => {
+        await page.getByText('Datepicker').click()
+        const calendarInputField = page.getByPlaceholder('Form Picker')
+        await calendarInputField.click()
+
+        //Dynamically pick date
+        const date = new Date()
+        date.setDate(date.getDate() + 100)
+
+        const expectedDay = date.getDate().toString()
+        const expectedMonth = date.toLocaleDateString('En-US', {month: 'short'})
+        const expectedMonthLong = date.toLocaleDateString('En-US', {month: 'long'})
+        const expectedYear = date.getFullYear().toString()
+        const expectedDate = `${expectedMonth} ${expectedDay}, ${expectedYear}`
+
+        // To check what is the current month year once you click on datepicker
+        await calendarInputField.click() 
+        let currentMonthAndYear = await page.locator('nb-calendar-view-mode').getByRole('button').textContent()
+        const expectedMonthAndYear = `${expectedMonthLong} ${expectedYear}`
+
+        while(!currentMonthAndYear?.includes(expectedMonthAndYear)) {
+            // if it doesnt match then we will click on next arrow
+            await page.locator('.next-month').click()
+            currentMonthAndYear = await page.locator('nb-calendar-view-mode').textContent()
+        }
+
+        await calendarInputField.click()
+        await page.locator('.day-cell:not(.bounding-month)').getByText(expectedDay, {exact: true}).click()
+        await expect(calendarInputField).toHaveValue(expectedDate)
     })
 
 })
