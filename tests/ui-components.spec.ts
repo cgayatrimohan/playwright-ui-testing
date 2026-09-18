@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { table } from 'console'
 
 test.beforeEach(async ({ page }) => {
     await page.goto("https://playground.bondaracademy.com/")
@@ -130,5 +131,49 @@ test.describe('Tables and Data Page', async() => {
         // example native built into browser confirmation dialog box 
         await page.locator('tr', {hasText: 'mdo@gmail.com'}).locator('.nb-trash').click()
         await expect(page.locator('tr', {hasText: 'mdo@gmail.com'})).not.toBeVisible()
+    })
+
+    test('Web table', async({ page }) => {
+
+        //1. how to select row by any visible text 
+        const tableRowByEmail = page.getByRole('row', {name: 'twitter@outlook.com'})
+        await tableRowByEmail.locator('.nb-edit').click()
+        await tableRowByEmail.getByPlaceholder('Age').fill('35')
+        await tableRowByEmail.locator('.nb-checkmark').click()
+
+        await expect(tableRowByEmail.locator('td').last()).toHaveText('35')
+
+
+        //2. Get row by a specific column value
+        const firstColField = page.getByRole('cell').nth(1) //second cell within the row
+        const tableRowById = page.getByRole('row').filter({has: firstColField.getByText('10')})
+        await tableRowById.locator('.nb-edit').click()
+        await page.locator('tbody').getByPlaceholder('E-mail').fill('test@example.com')
+        await page.locator('tbody').locator('.nb-checkmark').click()
+        await expect(tableRowById.locator('td').nth(5)).toHaveText('test@example.com')
+
+        //3. List of all values from a column by looping through the table rows
+        //  [usecase: test the filter value on a column here, let's filter on age]
+        
+        const ages = ["20", "30", "40", "200"]
+
+        for(let age of ages) {
+            await page.getByPlaceholder('Age').fill(age)
+
+            if(age == "200") {
+                await expect(page.locator('tbody')).toContainText("No data found")
+            } else {
+                //since the table has a small delay till it shows all filtered values, 
+                // first let's verify if the first row, age column shows 20
+                await expect(page.locator('tbody tr').first().locator('td').last()).toHaveText(age)
+                
+                const allTableRows = await page.locator('tbody tr').all()
+                
+                for(let row of allTableRows) {
+                    await expect(row.locator('td').last()).toHaveText(age)
+                }
+            }
+        }
+
     })
 })

@@ -90,4 +90,21 @@ test.describe('Locator syntax tests', () => {
         await page.getByRole('button', {name: 'Large modal'}).click()
         await page.locator('#closeLargeModal').click() 
     })
+
+    test('Web tables', async({ page }) => {
+        await page.goto("https://demoqa.com/webtables")
+
+        // how to select a row based on visible text
+        const tableRowByEmail =  page.getByRole('row', {name: 'cierra@example.com'})
+        await tableRowByEmail.locator('#edit-record-1').click()
+        await page.getByRole('textbox', { name: 'Age' }).fill('35');
+        await page.getByRole('button', {name: 'Submit'}).click()
+
+        // how to get row by specific column value
+        const firstColumnField = page.getByRole('cell').nth(2) //third cell within the row
+        const tableRowByAge = page.getByRole('row').filter({has: firstColumnField.getByText('35')})
+        await tableRowByAge.locator('#edit-record-1').click()
+        await page.locator('#userEmail').fill('test@example.com')
+        await page.getByRole('button', {name: 'Submit'}).click()
+    })
 })
