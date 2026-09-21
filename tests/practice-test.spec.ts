@@ -151,4 +151,14 @@ test.describe('Locator syntax tests', () => {
         await page.getByRole('tabpanel', {name: 'Simple'}).locator('.drop-box').hover()
         await page.mouse.up()
     })
+
+    test('TextBox', async({ page }) => {
+        await page.goto("https://demoqa.com/text-box")
+
+        await page.locator('#userName').fill('Test User')
+        await page.getByPlaceholder('name@example.com').fill('test@example.com')
+        await page.getByPlaceholder('Current Address').fill('Test address, 94539')
+        await page.locator('#permanentAddress').fill('test permanent address')
+        await page.getByRole('button', {name: 'Submit'}).click()
+    })
 })
