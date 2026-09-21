@@ -199,6 +199,14 @@ test.describe('Modal & Overlays Page', async () => {
 
 
     })
+
+    test('iFrames', async({ page }) => {
+        await page.getByText('Dialog').click()
+
+        const frameLocator = page.frameLocator('[data-cy="esc-close-iframe"]') //entry point into the frame
+        await frameLocator.getByRole('button', {name: 'Open Dialog with esc close'}).click()
+
+    })
 })
 
 test.describe('Tables and Data Page', async() => {
@@ -264,5 +272,22 @@ test.describe('Tables and Data Page', async() => {
             }
         }
 
+    })
+})
+
+
+test.describe('Extra Components', async() => {
+    test('Drag and Drop', async({ page }) => {
+        await page.getByText('Extra Components').click()
+        await page.getByText('Drag & Drop').click()
+
+        // example 1
+        await page.getByText('Get groceries').dragTo(page.locator('#drop-list'))
+
+        //example 2
+        await page.getByText('Clean my room').hover()
+        await page.mouse.down()
+        await page.locator('#drop-list').hover()
+        await page.mouse.up()
     })
 })

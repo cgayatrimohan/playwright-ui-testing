@@ -53,3 +53,7 @@ Dynamically use date
 Bounding box method
 ------------------------
 Creates coordinates along the top and left line. Top becomes the X coordinate and left becomes the Y coordinates.
+
+iFrame
+----------------
+An HTML structure when you have a web page or web document inside the existing web page. 

@@ -126,7 +126,29 @@ test.describe('Locator syntax tests', () => {
         // await page.getByRole('option', {name: '12:00', exact: true}).click()
         // await expect(dateTimePickerField).toHaveValue('September 17, 2026 12:00 PM')
         await page.getByRole('option', {name: '08:45', exact: true}).click()
-        await expect(dateTimePickerField).toHaveValue('September 17, 2026 8:45 AM')
-        
+        await expect(dateTimePickerField).toHaveValue('September 17, 2026 8:45 AM')      
+    })
+
+    test('iFrame', async({ page }) => {
+       await page.goto("https://demoqa.com/frames") 
+
+       const frameLocator = page.frameLocator('#frame1')
+       let textInsideFrame = await frameLocator.locator('#sampleHeading').allTextContents()
+
+       console.log(textInsideFrame)
+
+       //switch to other frame
+       const frameLocator2 = page.frameLocator('#frame2')
+       let textInsideFrame2 = await frameLocator2.locator('#sampleHeading').allTextContents()
+       await expect(frameLocator2.locator('#sampleHeading')).toHaveText(textInsideFrame2)
+    })
+
+    test('Drag & Drop', async({ page }) => {
+        await page.goto("https://demoqa.com/droppable")
+
+        await page.locator('#draggable').hover()
+        await page.mouse.down()
+        await page.getByRole('tabpanel', {name: 'Simple'}).locator('.drop-box').hover()
+        await page.mouse.up()
     })
 })
