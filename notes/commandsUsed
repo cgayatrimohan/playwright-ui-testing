@@ -62,3 +62,8 @@ An HTML structure when you have a web page or web document inside the existing w
 Page Object Model (POM)
 -----------------------
 https://playwright.dev/docs/pom
+
+
+Better logging when tests fail
+--------------------------------------
+https://playwright.dev/docs/api/class-test#test-step

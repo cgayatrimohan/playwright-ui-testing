@@ -1,4 +1,5 @@
 import {Locator,Page} from '@playwright/test'
+import { step } from '../helpers/test-step-decorator'
 
 export class NavigationDemoQAPage {
 
@@ -9,6 +10,7 @@ export class NavigationDemoQAPage {
         this.page = page
     }
 
+    @step
     async textBoxPage() {
         await this.selectedgroupMenuItems('Elements')
         await this.page.getByText('Text Box').click()
