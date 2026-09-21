@@ -48,3 +48,8 @@ Dynamically use date
 -----------------------
 - Date function
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+
+
+Bounding box method
+------------------------
+Creates coordinates along the top and left line. Top becomes the X coordinate and left becomes the Y coordinates.

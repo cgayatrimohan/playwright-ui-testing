@@ -5,6 +5,36 @@ test.beforeEach(async ({ page }) => {
     await page.goto("https://playground.bondaracademy.com/")
 })
 
+test.describe('IOT Dashboard', async() => {
+    test('Sliders - Temperature', async ({ page }) => {
+        // example 1: By setting the attribute values
+        const tempGauge = page.locator('[tabtitle="Temperature"] ngx-temperature-dragger circle')
+
+        // to set the value of the attributes, we to execute javascript inside of the webpage
+        await tempGauge.evaluate( element => {
+            element.setAttribute('cx', '227.4867') //partial value is good enough
+            element.setAttribute('cy', '227.4867') //partial value is good enough
+        })
+        await tempGauge.click()
+
+        // example 2: using mouse movement [Harder approach]
+        const tempBox = page.locator('[tabtitle="Temperature"] ngx-temperature-dragger')
+        await tempBox.scrollIntoViewIfNeeded()
+
+        const box = await tempBox.boundingBox()
+        const x = box?.x + box?.width / 2
+        const y = box?.y + box?.width / 2
+
+        await page.mouse.move(x,y)
+        await page.mouse.down()
+        await page.mouse.move(x+100, y)
+        await page.mouse.move(x+100, y+100)
+        await page.mouse.up()
+
+        await expect(tempBox).toContainText('30')
+    })
+})
+
 test.describe('Forms Layouts Page', async () => {
 
     test.beforeEach(async ({ page }) => {
