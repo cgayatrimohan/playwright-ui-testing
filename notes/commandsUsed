@@ -67,3 +67,20 @@ https://playwright.dev/docs/pom
 Better logging when tests fail
 --------------------------------------
 https://playwright.dev/docs/api/class-test#test-step
+
+
+NPM Scripts
+-----------
+So apart from just inline commands for the playwright test [add inside package.json --> scripts],
+you can call different shell scripts or different commands,
+create the sequence of the commands that you want to be executed.
+Instead of then configuring the long command somewhere inside of your CICD or
+typing something from the keyboard, you can use a short script for
+different operations and just call them directly inside of the command line.
+
+
+Test Data Generator
+--------------------------
+Using the library faker.js
+- go to google -> faker.js -> download by using 'npm install @faker-js/faker --save-dev'
+- import faker into the test spec and then generate random test data
