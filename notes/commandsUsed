@@ -117,3 +117,27 @@ make a teardown for your test. That's it. That's all the fixture is responsible
 for. So it's behavior very similar to the before hook or after hook that we
 already used before in the test. But it has nice features, additional features in
 the fixture that makes using fixture kind of more sense very often than using just before hooks.
+
+Tags too test cases
+-----------------------
+test('Name of the test case', {tag: '@smoke}, async({ page }) => {
+
+})
+
+use command: npx playwright test -- project=chromium --grep @smoke
+
+test('Name of the test case', {tag: ['@smoke', '@regression']}, async({ page }) => {
+
+})
+
+if more than one tag: npx playwright test -- project=chromium --grep "@smoke|@regression"
+
+
+Visual testing
+-----------------
+example: Adding this line in forms layoust-> using the grid -> radio buttons test
+
+await expect(usingTheGridForm).toHaveScreenshot({maxDiffPixels: 100})
+
+**if you want to update the screenshots
+npx playwright test --project=chromium --grep @radio -- update-snapshots
