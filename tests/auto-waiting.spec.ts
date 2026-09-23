@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 test.beforeEach(async ({ page }, testInfo) => {
-    await page.goto("https://playground.bondaracademy.com/")
+    await page.goto("/")
     await page.getByText('Modal & Overlays').click()
     await page.getByText('Dialog').click()
     // testInfo.setTimeout(10000) //set timeout for the test case to 10 seconds only for this test case.

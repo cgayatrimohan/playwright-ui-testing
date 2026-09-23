@@ -84,3 +84,36 @@ Test Data Generator
 Using the library faker.js
 - go to google -> faker.js -> download by using 'npm install @faker-js/faker --save-dev'
 - import faker into the test spec and then generate random test data
+
+
+Parallel execution
+---------------------
+Risks:
+But there are two problems that comes with it.
+And most likely, when you enable fully parallel true and try to run your test,
+they may have a lot flaky than they were before when you executed them sequentially.
+
+And there are two reasons behind it.
+
+The reason number one is your test environment simply not powerful enough to handle parallel execution, because playwright runs very fast. And imagine running two or three workers in parallel is doing just a lot of stuff on your application that creates a lot of pressure on the system.
+
+For example, in my test suite at Bonder Academy, in my test environment, I run all my tests only just in the single worker, because my test environment can handle even two workers running tests in parallel.
+If in your case, you have a more powerful CI machine or more powerful test environment,
+then you can, of course, run more workers and parallel threads.
+
+The second problem that you most likely will have is that if your tests are not properly isolated and they are sharing the same test data, most likely when you run this fully in parallel mode, some of your tests may just clash together on some shared test data. And when one test modify one test data and the other test trying to reach this test data, reading it or modifying it at the same time, and just tests conflicting with each other.
+
+That's the most typical problem of parallel execution.And if you run your tests sequentially and they work fine, then you enable parallel and your tests start failing.
+
+First, check the performance metric of your environment. Do you see anything in the red zone, maybe CPU or memory or something? If your test environment handles just fine, then dig into the test data problem and make sure that your test is independent. And your test data does not have a dependency on the other tests, so you need to figure out this problem.
+
+So that's it, configuration is pretty simple.And the biggest problem would be managing the test data, guys. So I mentioned before, it's one of the most difficult problems in the test automation, so just you will know where to dig into.
+
+
+Fixtures
+--------------------
+a function in the playwright that can create a precondition for your test or
+make a teardown for your test. That's it. That's all the fixture is responsible
+for. So it's behavior very similar to the before hook or after hook that we
+already used before in the test. But it has nice features, additional features in
+the fixture that makes using fixture kind of more sense very often than using just before hooks.

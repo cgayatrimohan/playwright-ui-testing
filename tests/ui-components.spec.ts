@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { table } from 'console'
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("https://playground.bondaracademy.com/")
+    await page.goto("/")
 })
 
 test.describe('IOT Dashboard', async() => {
