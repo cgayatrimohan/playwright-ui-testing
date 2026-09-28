@@ -11,3 +11,20 @@ test('Navigate to TextBox page', async({ page }) => {
     await page.locator('.card-body').getByText('Elements').click()
     await naviagteTo.textBoxPage()
 })
+
+test('Handle new page/tabs', async({ page, context }) => {
+    await page.goto('https://demoqa.com/browser-windows');
+
+    const newTabPromise = page.waitForEvent("popup");
+    await page.getByRole('button', {name: 'New Tab'}).click();
+
+    const newTab = await newTabPromise;
+    await newTab.getByRole('heading', { name: 'This is a sample page' }).click();
+
+    // alternate method where you get all the open pages and switch focus
+    // const allTabs = context.pages()
+    // const mainPage = allTabs[0]
+    // const secondTab = allTabs[1]
+
+    // await mainPage.bringToFront();  
+});
