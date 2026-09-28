@@ -12,6 +12,16 @@ test('Navigate to TextBox page', async({ page }) => {
     await naviagteTo.textBoxPage()
 })
 
+test('Iframes', async ({ page }) => {
+    const navigateTo = new NavigationDemoQAPage(page)
+    
+    await page.locator('.card-body').getByText('Alerts, Frame & Windows').click()
+    await navigateTo.framesPage()
+
+    page.frameLocator('#frame1Wrapper').getByText('This is a sample page')
+})
+
+
 test('Handle new page/tabs', async({ page, context }) => {
     await page.goto('https://demoqa.com/browser-windows');
 

@@ -17,6 +17,11 @@ export class NavigationDemoQAPage {
 
     }
 
+    async framesPage() {
+        await this.selectedgroupMenuItems('Alerts, Frame & Windows')
+        await this.page.getByRole('link', {name: 'Frames', exact: true}).click()
+    }
+
     private async selectedgroupMenuItems(groupMenuTitle: string) {
         const groupMenuItem = this.page.locator('.text', {hasText: groupMenuTitle})
         const expandedStatus = groupMenuItem.locator('.element-list accordion-collapse collapse')
