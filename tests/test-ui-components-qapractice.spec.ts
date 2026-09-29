@@ -197,4 +197,57 @@ test.describe('Testing all UI components', async () => {
         const resultText = page.locator('#result-text')
         await expect(resultText).toContainText(secretInputText)
     })
+    
+    test('Drag and Drop', async ({ page }) => {
+        await page.getByRole('link', { name: 'Single UI Elements' }).click()
+        await page.getByRole('link', { name: 'Drag and Drop' }).click()
+
+        const boxes = page.getByRole('link', {name: 'Boxes'})
+        await expect(boxes).toBeVisible()
+
+        await page.getByText('Drag me').hover()
+        await page.mouse.down()
+        await page.locator('#rect-droppable').getByText('Drop here').hover()
+        await page.mouse.up()
+
+        const dropSuccessText = page.locator('#text-droppable')
+        await expect(dropSuccessText).toHaveText('Dropped!')
+
+        //Images drag and drop
+        await page.getByRole('link', {name: 'Images'}).click()
+        await page.locator('#rect-droppable1').hover()
+        await page.mouse.down()
+        await page.locator('#rect-droppable2').hover()
+        await page.mouse.up()
+    })
+
+    /**
+     * Test case for testing the iframes
+     */
+    test('IFrames', async({page}) => {
+        await page.getByRole('link', { name: 'Single UI Elements' }).click()
+        await page.getByRole('link', { name: 'Iframes' }).click()   
+        
+        const frameLocator = page.frameLocator('.embed-responsive-item')
+        await frameLocator.getByRole('link', {name: 'Main call to action'}).click()
+    })
+
+    test('Pop up', async ({page}) => {
+        await page.getByRole('link', { name: 'Single UI Elements' }).click()
+        await page.getByRole('link', { name: 'Pop-Up' }).click()
+        
+        const modalLink = page.getByRole('link', {name: 'Modal'})
+        await expect(modalLink).toBeVisible()
+
+        await page.getByRole('button', {name: 'Launch Pop-Up'}).click()
+        await expect(page.getByRole('heading', { name: 'I am a Pop-Up' })).toBeVisible();
+        
+        const checkbox = page.getByRole('checkbox', {name: 'Select me or not'})
+        await checkbox.check()
+        
+
+        await page.getByRole('button', {name: 'Send'}).click()
+        await expect(page.locator('#result-text')).toBeVisible();
+        await expect(page.locator('#result-text')).toContainText('select me or not');
+    })
 })
