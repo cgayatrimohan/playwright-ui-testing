@@ -131,7 +131,8 @@ test.describe('Testing all UI components', async () => {
         const newTabPromise = page.waitForEvent('popup')
         await page.getByRole('link', { name: 'New page will be opened on a new tab' }).click()
         const newTab = await newTabPromise
-        await expect(newTab.locator('#result-text')).toHaveText('I am a new page in a new tab')
+        const resultText = newTab.locator('#result-text')
+        await expect(resultText).toHaveText('I am a new page in a new tab')
 
         //New tab button
         await page.getByRole('link', { name: 'New tab button' }).click()
@@ -289,23 +290,23 @@ test.describe('Testing all UI components', async () => {
     test('Practice form', async ({ page }) => {
         await page.goto('https://www.qa-practice.com/forms/practice-form')
 
-        //Student registration form
+        // Student registration form
 
         // First Name & Last Name
         await page.getByRole('textbox', {name: 'First Name'}).fill('Fname')
         await page.getByRole('textbox', {name: 'Last Name'}).fill('Lname')
 
-        //Email
+        // Email
         await page.getByRole('textbox', {name: 'Email'}).fill('test@example.com')
 
-        //Gender
+        // Gender
         await page.getByRole('radio', {name: 'Female'}).check({force: true})
 
-        //Mobile Number
+        // Mobile Number
         await page.getByPlaceholder('Mobile Number').fill('1112223333')
 
 
-        //Languages
+        // Languages
         const subject = page.getByRole('textbox', {name: 'Type to search subjects...'})
         await subject.fill('S')
         await subject.press('ArrowDown')
@@ -313,26 +314,26 @@ test.describe('Testing all UI components', async () => {
 
 
         // Hobbies
-        await page.getByRole('checkbox', {name: 'Sports'}).click()
+        await page.getByRole('checkbox', {name: 'Sports'}).check()
 
-        // //Current Address
+        // Current Address
         await page.getByRole('textbox', {name: 'Current Address'}).fill('Test address, CA-93053')
         await expect(page.getByRole('textbox', {name: 'Current Address'})).toHaveValue('Test address, CA-93053')
 
-        //Select state
+        // Select state
         await page.locator('#div_id_state .custom-dropdown', {hasText: 'Select State'}).click()
         await page.locator('.custom-dropdown-option', {hasText: 'Uttar Pradesh'}).click()
 
 
-        //Select city
+        // Select city
         await page.locator('#div_id_city .custom-dropdown').filter({hasText: 'Select City'}).click()
         await page.locator('.custom-dropdown-option', {hasText: 'Agra'}).click({force: true})
 
-        //Assertions
+        // Assertions
         await expect(page.locator('#div_id_state .custom-dropdown-control').locator('.selected-value')).toHaveText('Uttar Pradesh')
         await expect(page.locator('#div_id_city .custom-dropdown-control').locator('.selected-value')).toHaveText('Agra')
 
-        //Submit form
+        // Submit form
         await page.getByRole('button', {name: 'Submit'}).click()
         await page.locator('.modal-footer').getByRole('button', {name: 'Close'}).click()
 

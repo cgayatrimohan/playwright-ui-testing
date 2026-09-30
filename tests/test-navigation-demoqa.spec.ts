@@ -27,8 +27,8 @@ test('Handle new page/tabs', async({ page, context }) => {
 
     const newTabPromise = page.waitForEvent("popup");
     await page.getByRole('button', {name: 'New Tab'}).click();
-
     const newTab = await newTabPromise;
+    
     await newTab.getByRole('heading', { name: 'This is a sample page' }).click();
 
     // alternate method where you get all the open pages and switch focus
