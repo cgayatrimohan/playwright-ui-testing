@@ -2,6 +2,9 @@ import { test, expect, chromium } from '@playwright/test'
 import path from 'path';
 import fs from 'fs';
 
+/**
+ * Multiple browser context (to achieve multi-user testing) example
+ */
 test('multiple context example', async ({ }) => {
     const browser = await chromium.launch(); // Or add browser fixture which will launch the browser
 
@@ -22,6 +25,9 @@ test('multiple context example', async ({ }) => {
 
 });
 
+/**
+ * API testing examples for GET/POST/DELETE
+ */
 test('API Testing', async ({ request }) => {
 
     // GET Request
@@ -49,6 +55,10 @@ test('API Testing', async ({ request }) => {
     expect(deleteArticleResponse.status()).toEqual(204)
 });
 
+
+/**
+ * File upload example
+ */
 test('File upload', async ({ page }) => {
 
     await page.goto('https://example.com');
@@ -69,6 +79,9 @@ test('File upload', async ({ page }) => {
 });
 
 
+/**
+ * File download example
+ */
 test('Handle and verify file download', async ({ page }) => {
 
     await page.goto('https://example.com');
@@ -77,7 +90,7 @@ test('Handle and verify file download', async ({ page }) => {
     const downloadPromise = page.waitForEvent('download');
 
     // 2. Click the button or link that triggers the download action
-    await page.getByRole('link', {name: 'Download invoice (pdf)'}).click();
+    await page.getByRole('link', { name: 'Download invoice (pdf)' }).click();
     const download = await downloadPromise;
 
     // 3. Wait for the browser to finish downloading the file stream
@@ -92,6 +105,14 @@ test('Handle and verify file download', async ({ page }) => {
     expect(fs.existsSync(savePath)).toBeTruthy();
 });
 
+
+/**
+ * Example for 
+ * - Screenshots and files
+ * - Network mocking
+ * - Storage & browser execution
+ * - Dialogs & debug
+ */
 test('Example 21', async ({ page }) => {
 
     const browser = await chromium.launch();
@@ -114,4 +135,77 @@ test('Example 21', async ({ page }) => {
 
     await context.storageState({ path: 'auth.json' });
     await context.close();
+});
+
+/**
+ * Example for Network Interception and Mocking
+ */
+test('Mock API response', async ({ page }) => {
+
+    await page.route('**/api/users', async (route) => {
+        route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify([
+                {
+                    id: 1,
+                    name: 'Mock user'
+                }
+            ])
+        });
+    });
+
+    //Abort specific requests
+    await page.route('**/*.{png,jpeg,jpg}', async (route) => {
+        route.abort();
+    });
+
+    // Continue with modifications
+    await page.route('**/api/**', async (route) => {
+        route.continue({
+            headers: {
+                ...route.request().headers(),
+                'Authorization': 'Bearer mock-token'
+            }
+        });
+    });
+
+    await page.goto('/users');
+});
+
+/**
+ * Different types of waits
+ */
+test('Types of waits', async({page}) => {
+
+    // 1. Auto-wait (built - in, most common)
+    await page.click('button'); // Automatically waits
+
+    // 2. Wait for element
+    await page.locator('button').waitFor({state: 'visible'});
+    await page.locator('button').waitFor({state: 'hidden'});
+
+    // 3. Wait for Navigation
+    await Promise.all([
+        page.waitForURL('/dashboard'),
+        page.click('a[href="/dashboard"]')
+    ]);
+    
+    // 4. Wait for load state
+    await page.goto('https://example.com');
+    await page.waitForLoadState('networkidle'); // load domcontentloaded, netwrokidle
+
+    // 5. Wait for selector
+    await page.waitForSelector('.dynamic-content');
+
+    // 6. Wait for function/condition
+    await page.waitForFunction(() => {
+        return document.querySelectorAll('.items').length > 5;
+    });
+
+    // 7. Wait for timeout (NOT recommended)
+    await page.waitForTimeout(500);
+
+    // 8. Wait for event
+    await page.waitForEvent('dialog');
 });

@@ -161,4 +161,46 @@ test.describe('Locator syntax tests', () => {
         await page.locator('#permanentAddress').fill('test permanent address')
         await page.getByRole('button', {name: 'Submit'}).click()
     })
-})
+});
+
+test.describe('Elements Tab', async () => {
+
+    test('TextBox', async ({ page }) => {
+        await page.goto('https://demoqa.com/text-box');
+        await page.getByRole('textbox', {name: 'Full Name'}).fill('Test User');
+        await page.getByPlaceholder('name@example.com').fill('test@example.com');
+        await page.getByRole('textbox', {name: 'Current Address'}).fill('Test address, 94539');
+        await page.locator('#permanentAddress').fill('test permanent address');
+        await page.getByRole('button', {name: 'Submit'}).click();
+
+        //assertions
+        const outputField = page.locator('#userForm #output');
+        await expect(outputField.locator('#name')).toHaveText('Name:Test User');
+        await expect(outputField.locator('#email')).toHaveText('Email:test@example.com');
+        await expect(outputField.locator('#currentAddress')).toHaveText('Current Address :Test address, 94539');
+        await expect(outputField.locator('#permanentAddress')).toHaveText('Permananet Address :test permanent address');
+    });
+
+    test('Checkbox', async ({ page }) => {
+        await page.goto('https://demoqa.com/checkbox');
+        
+        await page.getByRole('checkbox').check();
+        await expect(page.getByRole('checkbox')).toBeChecked();
+    });
+
+    test('Radio Button', async ({ page }) => {
+        await page.goto('https://demoqa.com/radio-button');
+        await page.getByRole('radio', {name: 'Yes'}).check();
+        await expect(page.getByRole('radio', {name: 'Yes'})).toBeChecked();
+        await expect(page.locator('.text-success')).toHaveText('Yes');
+
+        await page.getByRole('radio', {name: 'Impressive'}).check();
+        await expect(page.locator('.text-success')).toHaveText('Impressive');
+
+        await expect(page.getByRole('radio', {name: 'No'})).toBeDisabled();
+    });
+
+    test('Web Tables', async ({ page }) => {
+        await page.goto('https://demoqa.com/web-tables');
+    });
+});
