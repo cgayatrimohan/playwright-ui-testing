@@ -1,4 +1,6 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from '@playwright/test';
+import path from 'path';
+import fs from 'fs';
 
 test.describe('Locator syntax tests', () => {
 
@@ -165,6 +167,9 @@ test.describe('Locator syntax tests', () => {
 
 test.describe('Elements Tab', async () => {
 
+    /**
+     * Test case for TextBox component in Elements Tab
+     */
     test('TextBox', async ({ page }) => {
         await page.goto('https://demoqa.com/text-box');
         await page.getByRole('textbox', {name: 'Full Name'}).fill('Test User');
@@ -181,6 +186,9 @@ test.describe('Elements Tab', async () => {
         await expect(outputField.locator('#permanentAddress')).toHaveText('Permananet Address :test permanent address');
     });
 
+    /**
+     * Test case for Checkbox component in Elements Tab
+     */
     test('Checkbox', async ({ page }) => {
         await page.goto('https://demoqa.com/checkbox');
         
@@ -188,6 +196,9 @@ test.describe('Elements Tab', async () => {
         await expect(page.getByRole('checkbox')).toBeChecked();
     });
 
+    /**
+     * Test case for Radio Button component in Elements Tab
+     */
     test('Radio Button', async ({ page }) => {
         await page.goto('https://demoqa.com/radio-button');
         await page.getByRole('radio', {name: 'Yes'}).check();
@@ -200,7 +211,180 @@ test.describe('Elements Tab', async () => {
         await expect(page.getByRole('radio', {name: 'No'})).toBeDisabled();
     });
 
+    /**
+     * Test case for Web Tables component in Elements Tab
+     */
     test('Web Tables', async ({ page }) => {
-        await page.goto('https://demoqa.com/web-tables');
+        await page.goto('https://demoqa.com/webtables');
+
+        // Edit row and make some changes
+        const firstRow = page.getByRole('row', {name: 'cierra@example.com'})
+        await firstRow.locator('#edit-record-1').click();
+        await page.getByRole('textbox', {name: 'Age'}).fill('25');
+        await page.getByRole('button', {name: 'Submit'}).click();
+
+        //assertions
+        const updatedRow = page.getByRole('cell').nth(2);
+        await expect(updatedRow).toHaveText('25');
+        
+        // Add a new row
+        await page.getByRole('button', {name: 'Add'}).click();
+        await page.getByRole('textbox', {name: 'First Name'}).fill('First User');
+        await page.getByRole('textbox', {name: 'Last Name'}).fill('Last User');
+        await page.getByPlaceholder('name@example.com').fill('testuser@example.com');
+        await page.getByRole('textbox', {name: 'Age'}).fill('39');
+        await page.getByRole('textbox', {name: 'Salary'}).fill('50000');
+        await page.getByRole('textbox', {name: 'Department'}).fill('IT');
+        await page.getByRole('button', {name: 'Submit'}).click();
+
+        //assertions
+        const newlyAddedRow = page.getByRole('cell', {name: 'First User'});
+        await expect(newlyAddedRow).toHaveText('First User');
+        await expect(page.getByRole('cell', {name: 'Last User'})).toHaveText('Last User');
+
+        // Delete newly added row
+        const lastRow = page.getByRole('row', {name: 'testuser@example.com'});
+        await lastRow.locator('#delete-record-4').click();
+        await expect(page.getByRole('row', {name: 'testuser@example.com'})).toBeHidden();
+    });
+
+    /**
+     * Test case for Buttons component in Elements Tab
+     */
+    test('Buttons', async ({ page }) => {
+        await page.goto('https://demoqa.com/buttons');
+
+        // Click on "Double Click" button
+        await page.getByRole('button', {name: 'Double Click Me', exact: true}).dblclick();
+        await expect(page.locator('#doubleClickMessage')).toHaveText('You have done a double click');
+
+        // Click on "Right Click" button
+        await page.getByRole('button', {name: 'Right Click Me', exact: true}).click({button: 'right'});
+        await expect(page.locator('#rightClickMessage')).toHaveText('You have done a right click');
+
+        //Click on "Click Me" button
+        await page.getByRole('button', {name: 'Click Me', exact: true}).click();
+        await expect(page.locator('#dynamicClickMessage')).toHaveText('You have done a dynamic click');
+    });
+
+    /**
+     * Test case for Links component in Elements Tab
+     */
+    test('Links opening new tabs', async ({ page, context }) => {
+        await page.goto('https://demoqa.com/links');
+
+        // Click on "Home" link to open a new tab
+        const newTabPromise = context.waitForEvent('page');
+        await page.getByRole('link', {name: 'Home'}).first().click();
+        const newTab = await newTabPromise;
+        
+        // Assert the new tab opened and has the expected URL
+        await expect(newTab).toHaveURL('https://demoqa.com/');
+
+        // close new tab
+        await newTab.close();
+    
+        // back to main page
+        await page.bringToFront();
+    
+        // Click on "Dynamic Link"
+        const dynamicLinkPromise = context.waitForEvent('page');
+        await page.locator('#dynamicLink').click();
+        const dynamicLink = await dynamicLinkPromise;
+        
+        //Assert the new tab opened and has the expected URL
+        await expect(dynamicLink).toHaveURL('https://demoqa.com/');
+
+        // close dynamic link tab
+        await dynamicLink.close();
+    });
+
+    /**
+     * Links sending api calls
+     */
+    test('Links sending api calls', async ({ page }) => {
+        await page.goto('https://demoqa.com/links');
+
+        // Click on "Created" link to trigger API call
+        await page.getByRole('link', {name: 'Created'}).click();
+
+        // Assert the API call was made by checking the network request
+        const response = await page.waitForResponse('https://demoqa.com/created');
+        expect(response.status()).toBe(201);
+
+        //Click on "No Content" link to trigger API call
+        await page.getByRole('link', {name: 'No Content'}).click();
+        const noContentResponse = await page.waitForResponse('https://demoqa.com/no-content');
+        expect(noContentResponse.status()).toBe(204);
+
+        // Click on "Moved" link to trigger API call
+        await page.getByRole('link', {name: 'Moved'}).click();
+        const movedResponse = await page.waitForResponse('https://demoqa.com/moved');
+        expect(movedResponse.status()).toBe(301);
+
+        // Click on "Bad request" link to trigger API call
+        await page.getByRole('link', {name: 'Bad request'}).click();
+        const badRequestResponse = await page.waitForResponse('https://demoqa.com/bad-request');
+        expect(badRequestResponse.status()).toBe(400);
+
+        // Click on "Unauthorized" link to trigger API call
+        await page.getByRole('link', {name: 'Unauthorized'}).click();
+        const unauthorizedResponse = await page.waitForResponse('https://demoqa.com/unauthorized');
+        expect(unauthorizedResponse.status()).toBe(401);
+
+        // Click on "Forbidden" link to trigger API call
+        await page.getByRole('link', {name: 'Forbidden'}).click();
+        const forbiddenResponse = await page.waitForResponse('https://demoqa.com/forbidden');
+        expect(forbiddenResponse.status()).toBe(403);
+
+        // Click on "Not Found" link to trigger API call
+        await page.getByRole('link', {name: 'Not Found'}).click();
+        const notFoundResponse = await page.waitForResponse('https://demoqa.com/invalid-url');
+        expect(notFoundResponse.status()).toBe(404);
+    });
+
+    /**
+     * Test case for Broken Links
+     */
+    test('Broken Links', async ({ page }) => {
+        await page.goto('https://demoqa.com/broken');
+
+        await page.getByRole('link', {name: 'Click Here for Valid Link'}).click();
+        await expect(page).toHaveURL('https://demoqa.com');
+
+        await page.goto('https://demoqa.com/broken');
+
+        await page.getByRole('link', {name: 'Click Here for Broken Link'}).click();
+        await expect(page).toHaveURL('http://the-internet.herokuapp.com/status_codes/500');
+    });
+
+    /**
+     * Test case for Download
+     */
+    test('Download', async ({ page }) => {
+        await page.goto('https://demoqa.com/upload-download');
+
+        const downloadPromise = page.waitForEvent('download');
+        await page.getByRole('button', {name: 'Download'}).click();
+        const download = await downloadPromise;
+
+        const suggestedFileName = download.suggestedFilename();
+        console.log('Suggested file name:', suggestedFileName);
+        
+
+        const savePath = path.resolve(__dirname, `../downloads/${suggestedFileName}`);
+        await download.saveAs(savePath);
+        console.log(`Downloaded file saved as ${suggestedFileName}`);
+
+        expect(fs.existsSync(savePath)).toBeTruthy();
+    });
+
+
+    test('Upload', async ({ page }) => {
+        await page.goto('https://demoqa.com/upload-download');
+
+       const filePath = path.resolve(__dirname, '../downloads/sampleFile.jpeg');
+    //    await page.getByRole('button', { name: 'Choose File' }).setInputFiles('Codex.dmg');
+
     });
 });

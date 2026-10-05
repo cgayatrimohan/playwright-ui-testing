@@ -123,7 +123,7 @@ test.describe('Testing all UI components', async () => {
         await expect(resultText).toHaveText('to go by car to the sea today')
     })
 
-    test('New tab', async ({ page, context }) => {
+    test('New tab', async ({ page }) => {
         await page.getByRole('link', { name: 'Single UI Elements' }).click()
         await page.getByRole('link', { name: 'New tab' }).click()
 

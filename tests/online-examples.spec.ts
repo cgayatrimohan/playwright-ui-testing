@@ -98,7 +98,7 @@ test('Handle and verify file download', async ({ page }) => {
     console.log(`Downloaded file name from server: ${suggestedFileName}`);
 
     // 4. Save the file to a permanent path in your automation framework
-    const savePath = path.resolve(__dirname, `../downlaods/${suggestedFileName}`);
+    const savePath = path.resolve(__dirname, `../downloads/${suggestedFileName}`);
     await download.saveAs(savePath);
 
     // 5. Node.js assertion: Verify that the file actually exists on your hard drive
