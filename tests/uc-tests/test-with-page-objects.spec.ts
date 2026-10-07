@@ -1,5 +1,5 @@
-import {test } from '../fixture'
-import { PageManager } from '../page-objects/page-manager'
+import {test } from '../../fixture'
+import { PageManager } from '../../page-objects/page-manager'
 import { faker } from '@faker-js/faker'
 
 

@@ -1,5 +1,5 @@
 import { Console } from 'console'
-import { step } from '../helpers/test-step-decorator'
+import { step } from '../../helpers/test-step-decorator'
 import { test, expect } from '@playwright/test'
 
 test.describe('Testing all UI components', async () => {

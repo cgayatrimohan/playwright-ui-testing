@@ -1,5 +1,5 @@
 import {test, expect} from '@playwright/test'
-import { NavigationDemoQAPage} from '../page-objects/navigation-demoqa-page'
+import { NavigationDemoQAPage} from '../../page-objects/navigation-demoqa-page'
 
 test.beforeEach(async ({ page }) => {
     await page.goto("https://demoqa.com/")
