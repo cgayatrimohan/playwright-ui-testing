@@ -195,18 +195,40 @@ test.describe('Modal & Overlays Page', async () => {
     })
 
     test('Dialog', async({ page }) => {
-        await page.getByText('Dialog').click()
+        await page.getByText('Dialog').click();
 
+        // Random Dialog
+        await page.getByRole('button', {name: 'Enter Name'}).click();
+        await page.locator('nb-dialog-container').getByPlaceholder('Name').fill('Test User');
+        await page.getByRole('button', {name: 'Submit'}).click();
+        await expect(page.locator('nb-dialog-container')).not.toBeVisible();
 
+        await expect(page.getByText('Test User')).toBeVisible();
     })
 
     test('iFrames', async({ page }) => {
         await page.getByText('Dialog').click()
 
-        const frameLocator = page.frameLocator('[data-cy="esc-close-iframe"]') //entry point into the frame
-        await frameLocator.getByRole('button', {name: 'Open Dialog with esc close'}).click()
+        // entry point to the iframe
+        const frameLocator = page.frameLocator('[data-cy="esc-close-iframe"]') 
 
+        // 1. Open dialog with ecs close
+        await frameLocator.getByRole('button', {name: 'Open Dialog with esc close'}).click()
+        await expect(page.locator('nb-dialog-container')).toBeVisible();
+
+        await page.getByRole('button', {name: 'Dismiss Dialog'}).click();
+
+        //assertion to check if the dialog box is not visible
+        await expect(page.locator('nb-dialog-container')).not.toBeVisible();
+
+        // 2. Open dialog without esc close
+        await frameLocator.getByRole('button', {name: 'Open Dialog without esc close'}).click()
+        await expect(page.locator('nb-dialog-container')).toBeVisible();
+        await page.getByRole('button', {name: 'OK'}).click();
+
+        await expect(page.locator('nb-dialog-container')).not.toBeVisible();
     })
+
 })
 
 test.describe('Tables and Data Page', async() => {
