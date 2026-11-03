@@ -68,6 +68,36 @@ test.describe('Form Controls Tests', () => {
         await expect(multiSelect).toHaveValues(['nike', 'puma']);
     });
 
-    
+    test('Tooltip Test', async({ page }) => {
+        await page.getByTestId('pp-side-nav-tooltip').click();
 
+        const toolTip = page.getByTestId('tooltip-trigger');
+        await toolTip.hover();
+        await expect(page.getByTestId('tooltip-bubble')).toBeVisible();
+
+       await expect(page.getByTestId('tooltip-bubble')).toHaveText('Standard delivery takes 3–5 working days.')
+    });
+
+    test('Show or hide elements test', async({ page }) => {
+        await page.getByTestId('pp-side-nav-showhide').click();
+
+        const hideButton = page.getByTestId('btn-hide-element');
+        const showButton = page.getByTestId('btn-show-element');
+        const targetInput = page.getByTestId('showhide-textbox');
+        const targetState = page.getByTestId('showhide-state');
+
+        // Initial state - target input should be visible
+        await expect(targetInput).toBeVisible();
+        await expect(targetState).toContainText('visible');
+
+        // Click hide element
+        await hideButton.click();
+        await expect(targetInput).not.toBeVisible();
+        await expect(targetState).toContainText('hidden');
+
+        // Click show element
+        await showButton.click();
+        await expect(targetInput).toBeVisible();
+        await expect(targetState).toContainText('visible');
+    });
 });
