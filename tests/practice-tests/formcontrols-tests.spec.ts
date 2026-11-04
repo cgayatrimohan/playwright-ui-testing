@@ -92,7 +92,7 @@ test.describe('Form Controls Tests', () => {
 
         // Click hide element
         await hideButton.click();
-        await expect(targetInput).not.toBeVisible();
+        await expect(targetInput).toBeHidden();
         await expect(targetState).toContainText('hidden');
 
         // Click show element
@@ -100,4 +100,10 @@ test.describe('Form Controls Tests', () => {
         await expect(targetInput).toBeVisible();
         await expect(targetState).toContainText('visible');
     });
+
+    test('Hidden Elements Test', async({ page }) => {
+        await page.getByTestId('pp-side-nav-hidden-ajax').click();
+
+        
+    })
 });
